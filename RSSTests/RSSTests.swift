@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SWXMLHash
 @testable import RSS
 
 class RSSTests: XCTestCase {
@@ -24,6 +25,15 @@ class RSSTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let path = Bundle.main.path(forResource: "rss.xml", ofType: nil)
+        XCTAssertNotNil(path,"没有找到文件")
+        
+        let html = try! String(contentsOfFile: path!, encoding: .utf8)
+        let xml = SWXMLHash.parse(html)
+        // one root element
+        _ = xml["rss"].all.count
+        let items = xml["rss"]["channel"]["item"][0]["title"].element?.text
+        print(items as Any)
     }
     
     func testPerformanceExample() {
